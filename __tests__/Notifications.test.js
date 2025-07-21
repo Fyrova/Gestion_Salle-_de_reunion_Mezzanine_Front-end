@@ -25,9 +25,7 @@ describe('Notifications UI', () => {
       expect(screen.getByText('Meeting 1')).toBeInTheDocument();
     });
 
-    // Simulate notification display logic if any
-    // For example, check if notification component appears on certain action
+  
   });
 
-  // Add more tests for automatic email notifications UI if applicable
 });

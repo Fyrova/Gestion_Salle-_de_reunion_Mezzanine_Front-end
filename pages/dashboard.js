@@ -89,26 +89,28 @@ export default function Dashboard() {
             <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Heure début</th>
-                  <th>Heure fin</th>
-                  <th>Objet</th>
-                  <th>Organisateur</th>
-                  <th>Statut</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredReservations.map(reservation => (
-                  <tr key={reservation.id}>
-                    <td>{reservation.date}</td>
-                    <td>{reservation.startTime}</td>
-                    <td>{reservation.endTime}</td>
-                    <td>{reservation.subject}</td>
-                    <td>{reservation.organizer?.name || 'N/A'}</td>
-                    <td>{reservation.status}</td>
-                  </tr>
-                ))}
-              </tbody>
+              <th>Date</th>
+              <th>Heure début</th>
+              <th>Heure fin</th>
+              <th>Objet</th>
+              <th>Organisateur</th>
+              <th>Département</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredReservations.map(reservation => (
+              <tr key={reservation.id}>
+                <td>{reservation.date}</td>
+                <td>{reservation.startTime}</td>
+                <td>{reservation.endTime}</td>
+                <td>{reservation.subject}</td>
+                <td>{reservation.organizer?.name || 'N/A'}</td>
+                <td>{reservation.departement || 'N/A'}</td>
+                <td>{reservation.status}</td>
+              </tr>
+            ))}
+          </tbody>
             </table>
           )}
         </section>
@@ -120,26 +122,28 @@ export default function Dashboard() {
             <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th>Date création</th>
-                  <th>Heure début</th>
-                  <th>Heure fin</th>
-                  <th>Objet</th>
-                  <th>Organisateur</th>
-                  <th>Statut</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reservationsMadeToday.map(reservation => (
-                  <tr key={reservation.id}>
-                    <td>{reservation.createdAt ? new Date(reservation.createdAt).toLocaleString() : 'N/A'}</td>
-                    <td>{reservation.startTime}</td>
-                    <td>{reservation.endTime}</td>
-                    <td>{reservation.subject}</td>
-                    <td>{reservation.organizer?.name || 'N/A'}</td>
-                    <td>{reservation.status}</td>
-                  </tr>
-                ))}
-              </tbody>
+              <th>Date création</th>
+              <th>Heure début</th>
+              <th>Heure fin</th>
+              <th>Objet</th>
+              <th>Organisateur</th>
+              <th>Département</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reservationsMadeToday.map(reservation => (
+              <tr key={reservation.id}>
+                <td>{reservation.createdAt ? new Date(reservation.createdAt).toLocaleString() : 'N/A'}</td>
+                <td>{reservation.startTime}</td>
+                <td>{reservation.endTime}</td>
+                <td>{reservation.subject}</td>
+                <td>{reservation.organizer?.name || 'N/A'}</td>
+                <td>{reservation.departement || 'N/A'}</td>
+                <td>{reservation.status}</td>
+              </tr>
+            ))}
+          </tbody>
             </table>
           )}
         </section>
