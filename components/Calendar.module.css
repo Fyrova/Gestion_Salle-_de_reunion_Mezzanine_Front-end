@@ -1,0 +1,36 @@
+/* MyCalendar.module.css */
+.calendarContainer {
+  padding: 20px;
+}
+
+.reactCalendar {
+  background: #f0ebf3;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 100%;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  line-height: 1.125em;
+  border: none;
+  
+}
+
+.reactCalendar .react-calendar__tile {
+  padding: 10px;
+  font-size: 14px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.reactCalendar .react-calendar__tile--active {
+  background-color: #ff5722; /* custom active day color */
+  color: white;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  margin: 4px auto 0;
+}

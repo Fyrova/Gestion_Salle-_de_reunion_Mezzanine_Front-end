@@ -1,22 +1,34 @@
-import React from 'react';
 import dynamic from 'next/dynamic';
+import { Montserrat } from 'next/font/google';
+import styles from './Calendar.module.css';
+import 'react-calendar/dist/Calendar.css'; // default styling
+import React from 'react';
 
+const mona = Montserrat({ subsets: ['latin'] });
 const Calendar = dynamic(() => import('react-calendar'), { ssr: false });
 
 const ReservationCalendar = ({ value, onChange, reservations }) => {
   const tileContent = ({ date, view }) => {
     if (view === 'month') {
-      const dayReservations = reservations.filter(
+      const hasReservations = reservations.some(
         (reservation) => new Date(reservation.date).toDateString() === date.toDateString()
       );
-      if (dayReservations.length > 0) {
-        return <div className="dot" />;
-      }
+      return hasReservations ? <div className={styles.dot} /> : null;
     }
     return null;
   };
 
-  return <Calendar onChange={onChange} value={value} tileContent={tileContent} />;
+  return (
+    <div className={styles.calendarContainer}>
+      <Calendar
+        onChange={onChange}
+        value={value}
+        tileContent={tileContent}
+        className={`${styles.reactCalendar} ${mona.className}`}
+      />
+    </div>
+  );
 };
 
 export default ReservationCalendar;
+

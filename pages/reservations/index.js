@@ -3,6 +3,12 @@ import Link from 'next/link';
 import Header from '../../components/Header';
 import dynamic from 'next/dynamic';
 import OrganizerFilterInput from '../../components/OrganizerFilterInput';
+import { Montserrat } from 'next/font/google';
+import styles from './reservation.module.css';
+
+const mona = Montserrat({
+  subsets: ['latin'],
+});
 
 const ReservationCalendar = dynamic(() => import('../../components/ReservationCalendar').then(mod => mod.default), { ssr: false });
 
@@ -92,11 +98,8 @@ export default function Reservations() {
   return (
     <>
       <Header />
-      <main style={{ padding: '2rem' }}>
-        <h1>Liste des réservations</h1>
-        <nav style={{ marginBottom: '1rem' }}>
-          <Link href="/">Accueil</Link> | <Link href="/reservations/create">Créer une réservation</Link>
-        </nav>
+      <main style={{ padding: '2rem' }} className={ mona.className }>
+        <h1 style={{ textAlign: 'center'}}>LISTE DES RESERVATIONS</h1>
         <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
           <label>Filtrer par organisateur : </label>
           <OrganizerFilterInput value={organizerFilter} onChange={handleInputChange} />
@@ -105,6 +108,7 @@ export default function Reservations() {
             onClick={() => handleFilterClick('ordinary')}
             title="Afficher les réservations ordinaires (occurrences uniquement)"
             type="button"
+            className= {mona.className}
           >
             Simple
           </button>
@@ -113,6 +117,7 @@ export default function Reservations() {
             onClick={() => handleFilterClick('recurring')}
             title="Afficher les séries de réservations récurrentes"
             type="button"
+            className= {mona.className}
           >
             Récurrentes
           </button>
@@ -125,7 +130,11 @@ export default function Reservations() {
             <option value="CANCELLED">Annulé</option>
           </select>
         </div>
-        <ReservationCalendar reservations={reservations} onChange={setSelectedDate} />
+        
+        <div className="min-h-screen flex flex-col p-4">
+        <ReservationCalendar reservations={reservations} onChange={setSelectedDate}/>
+        </div>
+
         {Object.keys(groupedReservations).length === 0 ? (
           <p>Aucune réservation trouvée.</p>
         ) : (
@@ -147,7 +156,7 @@ export default function Reservations() {
                       &#9998;
                     </a>
                   </div>
-                  <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '1rem' }}>
+                  <table className={styles.table}>
                     <thead>
                       <tr>
                         <th>Date</th>
@@ -194,7 +203,7 @@ export default function Reservations() {
           })
         ) : (
           // Show all simple reservations and individual occurrences in a single table with one header
-          <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '1rem' }}>
+          <table className={styles.table}>
             <thead>
             <tr>
               <th>Date</th>

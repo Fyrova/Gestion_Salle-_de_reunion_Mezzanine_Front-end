@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Header from '../components/Header';
 import Link from 'next/link';
+import StatContainer from '../components/StatContainer';
+import { Montserrat } from 'next/font/google';
+import style from './dashboard.module.css';
+import Layout from '../components/Layout';
+
+const mona = Montserrat({
+  subsets: ['latin'],
+});
+
 
 export default function Dashboard() {
   const [reservations, setReservations] = useState([]);
@@ -70,23 +79,22 @@ export default function Dashboard() {
 
   return (
     <>
-      <Header />
-      <main style={{ padding: '2rem' }}>
-        <h1>Tableau de bord</h1>
+      <Layout>
+      <main style={{ padding: '2rem' }} className={ mona.className }>
+        <h1 style={{ textAlign: 'center', fontSize: '50px'}}>TABLEAU DE BORD</h1>
         <section>
-          <h2>Statistiques</h2>
-          <ul>
-            <li>Réservations faites aujourd'hui : {reservationsMadeToday.length}</li>
-            <li>Réservations faites ce mois-ci : {reservationsMadeThisMonth.length}</li>
-            <li>Nombre d'heures réservées aujourd'hui : {totalHoursReservedToday.toFixed(2)}</li>
-          </ul>
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            <StatContainer stats={reservationsMadeToday.length} titre={"Réservations faites aujourd'hui"} />
+            <StatContainer stats={reservationsMadeThisMonth.length} titre={"Réservations faites ce mois-ci"} />
+            <StatContainer stats={totalHoursReservedToday.toFixed(2)} titre={"Nombre d'heures réservées aujourd'hui"} />
+          </div>
         </section>
         <section>
           <h2>Réservations prévues pour aujourd'hui</h2>
           {filteredReservations.length === 0 ? (
             <p>Aucune réservation prévue pour aujourd'hui.</p>
           ) : (
-            <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <table className={style.table}>
               <thead>
                 <tr>
               <th>Date</th>
@@ -119,7 +127,7 @@ export default function Dashboard() {
           {reservationsMadeToday.length === 0 ? (
             <p>Aucune réservation faite aujourd'hui.</p>
           ) : (
-            <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <table className={style.table}>
               <thead>
                 <tr>
               <th>Date création</th>
@@ -148,6 +156,7 @@ export default function Dashboard() {
           )}
         </section>
       </main>
+      </Layout>
     </>
   );
 }

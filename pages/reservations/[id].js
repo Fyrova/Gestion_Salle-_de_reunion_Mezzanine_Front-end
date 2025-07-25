@@ -1,4 +1,4 @@
-  import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Header from '../../components/Header';
@@ -32,17 +32,7 @@ function RecurrenceOptions({ recurrenceRule, setRecurrenceRule }) {
         <option value="monthly">Mensuelle</option>
         <option value="yearly">Annuelle</option>
       </select>
-      {recurrenceRule.type && (
-        <div>
-          <label>Intervalle :</label>
-          <input
-            type="number"
-            min="1"
-            value={recurrenceRule.interval || 1}
-            onChange={e => updateRule('interval', parseInt(e.target.value, 10))}
-          />
-        </div>
-      )}
+
       {recurrenceRule.type === 'weekly' && (
         <div>
           <label>Jours de la semaine :</label>
@@ -159,39 +149,29 @@ export default function ReservationForm() {
             participantsCount: data.participantsCount || 0,
             departement: data.departement || '',
           });
-            if (data.recurrenceRule) {
-              // Parse recurrenceRule string to object if needed
-              const parseRRuleString = (rruleString) => {
-                console.log('Parsing recurrence rule:', rruleString);
-                const ruleParts = {};
-                rruleString.split(';').forEach(part => {
-                  const [key, value] = part.split('=');
-                  if (key && value) {
-                    ruleParts[key.toLowerCase()] = value;
-                  }
-                });
-                console.log('Parsed rule parts:', ruleParts);
-              const recurrenceObj = {
-                type: ruleParts['freq'] ? ruleParts['freq'].toLowerCase() : '',
-                interval: ruleParts['interval'] ? parseInt(ruleParts['interval'], 10) : 1,
-                weekNumber: ruleParts['bysetpos'] ? parseInt(ruleParts['bysetpos'], 10) : null,
-                dayOfWeek: ruleParts['byday'] ? (ruleParts['byday'].length === 2 ? ruleParts['byday'] : ruleParts['byday'].split(',')[0]) : null,
-                byDay: ruleParts['byday'] ? ruleParts['byday'].split(',') : [],
-                until: ruleParts['until'] ? ruleParts['until'].slice(0,4) + '-' + ruleParts['until'].slice(4,6) + '-' + ruleParts['until'].slice(6,8) : '',
-              };
-                console.log('Recurrence object:', recurrenceObj);
-                return recurrenceObj;
-              };
-              console.log('Récupération de la règle de récurrence:', data.recurrenceRule);
-              const parsedRule = parseRRuleString(data.recurrenceRule);
-              setRecurrenceRule(parsedRule);
-              setRecurrenceEnabled(true);
-              // Set endDate from data if present
-              if (data.endDate) {
-                console.log('Récupération de la date de fin:', data.endDate);
-                setRecurrenceRule(prev => ({ ...prev, until: data.endDate }));
-              }
-            }
+          if (data.recurrenceRule) {
+            // Parse recurrenceRule string to object if needed
+            const parseRRuleString = (rruleString) => {
+              const ruleParts = {};
+              rruleString.split(';').forEach(part => {
+                const [key, value] = part.split('=');
+                if (key && value) {
+                  ruleParts[key.toLowerCase()] = value;
+                }
+              });
+            const recurrenceObj = {
+              type: ruleParts['freq'] ? ruleParts['freq'].toLowerCase() : '',
+              interval: ruleParts['interval'] ? parseInt(ruleParts['interval'], 10) : 1,
+              weekNumber: ruleParts['bysetpos'] ? parseInt(ruleParts['bysetpos'], 10) : null,
+              dayOfWeek: ruleParts['byday'] && ruleParts['byday'].length === 2 ? ruleParts['byday'] : null,
+              byDay: ruleParts['byday'] ? ruleParts['byday'].split(',') : [],
+              until: ruleParts['until'] ? ruleParts['until'].slice(0,4) + '-' + ruleParts['until'].slice(4,6) + '-' + ruleParts['until'].slice(6,8) : '',
+            };
+              return recurrenceObj;
+            };
+            setRecurrenceRule(parseRRuleString(data.recurrenceRule));
+            setRecurrenceEnabled(true);
+          }
         })
         .catch(() => {
           setError('Erreur lors du chargement de la réservation');
@@ -226,7 +206,6 @@ export default function ReservationForm() {
   const serializeRecurrenceRule = (rule) => {
     if (!rule || !rule.type) return '';
     let rrule = `FREQ=${rule.type.toUpperCase()}`;
-    // Add INTERVAL only once
     if (rule.interval && rule.interval > 1) {
       rrule += `;INTERVAL=${rule.interval}`;
     }

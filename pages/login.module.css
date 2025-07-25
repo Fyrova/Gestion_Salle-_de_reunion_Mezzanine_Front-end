@@ -1,0 +1,43 @@
+.container {
+    padding: 1.5rem;
+    border-radius: 8px;
+    flex: 1;
+    margin: 0.5rem;
+    height: max-content;
+}
+
+.form input, .form select .form textarea {
+    width: 300px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+}
+
+.button {
+  background-image: linear-gradient(to right, white, #a25598ed);
+  border: none;
+  width: 300px;
+  height: 50px;
+  color: black;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 78px;
+  cursor: pointer;
+  transition: background-image 0.5s ease-out;
+}
+
+.button:hover {
+    background-image: linear-gradient(to left, white, #a25598ed);
+}
+
+.formgroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formgroup label {
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: white; /* or any color you want */
+}

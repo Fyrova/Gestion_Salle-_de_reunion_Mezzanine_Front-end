@@ -1,0 +1,15 @@
+.table {
+    border: none;
+    width: 100%;
+    border-collapse: collapse; /* replaces cellspacing */
+}
+
+.table td, .table th {
+    padding: 8px; /* replaces cellpadding */
+    border-bottom: 1px solid #a25598ed;
+}
+
+.table th {
+    background-color: #a25598ed;
+    color: white;
+}

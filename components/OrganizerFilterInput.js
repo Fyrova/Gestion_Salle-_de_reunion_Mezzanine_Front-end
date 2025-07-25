@@ -1,4 +1,9 @@
 import React, { useEffect, useRef } from 'react';
+import { Montserrat } from 'next/font/google';
+
+const mona = Montserrat({
+  subsets: ['latin'],
+});
 
 export default function OrganizerFilterInput({ value, onChange }) {
   const inputRef = useRef(null);
@@ -10,7 +15,7 @@ export default function OrganizerFilterInput({ value, onChange }) {
   }, [value]);
 
   return (
-    <input
+    <input className={mona.className}
       ref={inputRef}
       type="text"
       value={value}
