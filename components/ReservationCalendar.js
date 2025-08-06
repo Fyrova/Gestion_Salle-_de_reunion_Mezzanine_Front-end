@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { Montserrat } from 'next/font/google';
 import styles from './Calendar.module.css';
-import 'react-calendar/dist/Calendar.css'; // default styling
+import 'react-calendar/dist/Calendar.css'; 
 import React from 'react';
 
 const mona = Montserrat({ subsets: ['latin'] });

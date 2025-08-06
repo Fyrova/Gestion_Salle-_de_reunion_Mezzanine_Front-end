@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Header from '../../components/Header';
 import { Montserrat } from 'next/font/google';
-import styles from './reservation.module.css';
+import styles from './create.module.css';
 import Bouton from '../../components/Bouton';
 import Layout from '../../components/Layout';
 
@@ -133,223 +133,280 @@ export default function CreateReservation() {
   return (
     <>
       <Layout>
-      <main style={{ padding: '2rem' }} className={ mona.className }>
-        <h1>Créer une réservation</h1>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignContent:'baseline' }}>
-            <div className={styles.container}>
-              <h3>Organisateur</h3>
-              <div className={styles.formgroup}>
-                <label for="nom">Nom</label>
-                <input type="text" name='nom' value={organizerName} onChange={e => setOrganizerName(e.target.value)} required />
-              </div>
-              <div className={styles.formgroup}>
-                <label for="email">Email</label>
-                <input type="email" name="email" value={organizerEmail} onChange={e => setOrganizerEmail(e.target.value)} required />
-              </div>
-            </div>
+      <main className={`${mona.className} ${styles.pageContainer}`}>
+        <h1 className={styles.title}>CREER UNE RESERVATION</h1>
+        <form onSubmit={handleSubmit} className={styles.formContainer}>
+          <div className={styles.formSection}>
+            <h3>Organisateur</h3>
+            <label className={styles.formLabel} htmlFor="nom">Nom</label>
+            <input
+              id="nom"
+              type="text"
+              value={organizerName}
+              onChange={e => setOrganizerName(e.target.value)}
+              required
+              className={styles.formInput}
+            />
+            <label className={styles.formLabel} htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={organizerEmail}
+              onChange={e => setOrganizerEmail(e.target.value)}
+              required
+              className={styles.formInput}
+            />
+          </div>
 
-            <div className={styles.container}>
-              <h3>Objet de la réservation</h3>
-              <textarea value={subject} onChange={e => setSubject(e.target.value)} required rows="7" cols="80"/>
-            </div>
-            </div>
+          <div className={`${styles.formSection} ${styles.fullWidth}`}>
+            <h3>Objet de la réservation</h3>
+            <textarea
+              value={subject}
+              onChange={e => setSubject(e.target.value)}
+              required
+              rows="7"
+              className={styles.formTextarea}
+            />
+          </div>
 
           
 
-          <div className={styles.container}>
+          <div className={styles.formContainer}>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'baseline' }}>
-
-              <div className={styles.formgroup}>
-                <label for="date">Date:</label>
-                <input type="date" name="date" value={date} onChange={e => setDate(e.target.value)} required />
-              </div>
-
-            
-              <div className={styles.formgroup}>
-                <label for="heuredebut">Heure début:</label>
-                <input type="time" name="heuredebut" value={startTime} onChange={e => setStartTime(e.target.value)} required />
-              </div>
-              <div className={styles.formgroup}>
-                <label for="heurefin">Heure fin:</label>
-                <input type="time" name="heurefin" value={endTime} onChange={e => setEndTime(e.target.value)} required />
-              </div>
+            <div className={styles.formSection}>
+              <label htmlFor="date" className={styles.formLabel}>Date:</label>
+              <input
+                id="date"
+                type="date"
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                required
+                className={styles.formInput}
+              />
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '1rem' }}>
-              <div className={styles.formgroup}>
-                <label for="disposition">Disposition:</label>
-                <select name ="disposition" className={styles.select} value={disposition} onChange={e => setDisposition(e.target.value)}>
-                  <option value="en U">En U</option>
-                  <option value="theatral">Théâtral</option>
-                  <option value="Ronde">Ronde</option>
-                </select>
-              </div>
-              <div className={styles.formgroup}>
-                <label for="nbparticipants">Nombre de participants:</label>
-                <input type="number" name='nbparticipants' min="0" value={isNaN(participantsCount) ? 0 : participantsCount} onChange={e => {
+            <div className={styles.formSection}>
+              <label htmlFor="heuredebut" className={styles.formLabel}>Heure début:</label>
+              <input
+                id="heuredebut"
+                type="time"
+                value={startTime}
+                onChange={e => setStartTime(e.target.value)}
+                required
+                className={styles.formInput}
+              />
+            </div>
+
+            <div className={styles.formSection}>
+              <label htmlFor="heurefin" className={styles.formLabel}>Heure fin:</label>
+              <input
+                id="heurefin"
+                type="time"
+                value={endTime}
+                onChange={e => setEndTime(e.target.value)}
+                required
+                className={styles.formInput}
+              />
+            </div>
+
+            <div className={styles.formSection}>
+              <label htmlFor="disposition" className={styles.formLabel}>Disposition:</label>
+              <select
+                id="disposition"
+                className={styles.formSelect}
+                value={disposition}
+                onChange={e => setDisposition(e.target.value)}
+              >
+                <option value="en U">En U</option>
+                <option value="theatral">Théâtral</option>
+                <option value="Ronde">Ronde</option>
+              </select>
+            </div>
+
+            <div className={styles.formSection}>
+              <label htmlFor="nbparticipants" className={styles.formLabel}>Nombre de participants:</label>
+              <input
+                id="nbparticipants"
+                type="number"
+                min="0"
+                value={isNaN(participantsCount) ? 0 : participantsCount}
+                onChange={e => {
                   const val = parseInt(e.target.value, 10);
                   setParticipantsCount(isNaN(val) ? 0 : val);
-                }} />
-              </div>
+                }}
+                className={styles.formInput}
+              />
             </div>
 
           </div>
-          
-          <div className={styles.container}>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap:'1rem' }}>
+          <div className={styles.formContainer}>
 
-              <div className={styles.formgroup}>
-                <label for="equipement">Équipement:</label>
-                <input type="text" name="equipement" value={equipment} onChange={e => setEquipment(e.target.value)} />
-              </div>
-              <div className={styles.formgroup}>
-                <label for="departement">Département:</label>
-                <input type="text" name="departement" value={departement} onChange={e => setDepartement(e.target.value)} />
-              </div>
-
+            <div className={styles.formSection}>
+              <label htmlFor="equipement" className={styles.formLabel}>Équipement:</label>
+              <input
+                id="equipement"
+                type="text"
+                value={equipment}
+                onChange={e => setEquipment(e.target.value)}
+                className={styles.formInput}
+              />
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap:'1rem' }}>
+            <div className={styles.formSection}>
+              <label htmlFor="departement" className={styles.formLabel}>Département:</label>
+              <input
+                id="departement"
+                type="text"
+                value={departement}
+                onChange={e => setDepartement(e.target.value)}
+                className={styles.formInput}
+              />
+            </div>
 
-              <div className={styles.formgroup}>
-                <label for="typereservation">Type de réservation:</label>
-                <select name="typereservation" value={reservationType} onChange={e => setReservationType(e.target.value)}>
-                  <option value="presentiel">Présentiel</option>
-                  <option value="hybride">Hybride</option>
-                </select>
-              </div>
-              <div>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={recurrenceEnabled}
-                    onChange={e => setRecurrenceEnabled(e.target.checked)}
-                  />
-                  Réservation récurrente
-                </label>
-              </div>
+          </div>
 
+          <div className={styles.formContainer}>
+
+            <div className={styles.formSection}>
+              <label htmlFor="typereservation" className={styles.formLabel}>Type de réservation:</label>
+              <select
+                id="typereservation"
+                value={reservationType}
+                onChange={e => setReservationType(e.target.value)}
+                className={styles.formSelect}
+              >
+                <option value="presentiel">Présentiel</option>
+                <option value="hybride">Hybride</option>
+              </select>
+            </div>
+
+            <div className={styles.formSection}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={recurrenceEnabled}
+                  onChange={e => setRecurrenceEnabled(e.target.checked)}
+                />
+                {' '}Réservation récurrente
+              </label>
             </div>
 
           </div>
 
           {recurrenceEnabled && (
-
-            <div className={styles.container}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '1rem' }}>
-                <div>
-                  <div className={styles.formgroup}>
-                    <label>Type de récurrence :</label>
-                    <select
-                      value={recurrenceRule.type || ''}
-                      onChange={e => setRecurrenceRule({ ...recurrenceRule, type: e.target.value })}
-                    >
-                      <option value="">Aucune</option>
-                      <option value="DAILY">Quotidienne</option>
-                      <option value="WEEKLY">Hebdomadaire</option>
-                      <option value="MONTHLY">Mensuelle</option>
-                      <option value="YEARLY">Annuelle</option>
-                    </select>
+            <div className={styles.formSection}>
+              <label className={styles.formLabel}>Type de récurrence :</label>
+              <select
+                className={styles.formSelect}
+                value={recurrenceRule.type || ''}
+                onChange={e => setRecurrenceRule({ ...recurrenceRule, type: e.target.value })}
+              >
+                <option value="">Aucune</option>
+                <option value="DAILY">Quotidienne</option>
+                <option value="WEEKLY">Hebdomadaire</option>
+                <option value="MONTHLY">Mensuelle</option>
+                <option value="YEARLY">Annuelle</option>
+              </select>
+          {recurrenceRule.type && (
+                <div className={styles.formRow}>
+                  <div className={styles.recurrenceInputGroup}>
+                    <label className={styles.formLabel}>Intervalle :</label>
+                    <input
+                      className={styles.formInput}
+                      type="number"
+                      min="1"
+                      value={isNaN(recurrenceRule.interval) ? 1 : recurrenceRule.interval}
+                      onChange={e => {
+                        const val = parseInt(e.target.value, 10);
+                        setRecurrenceRule({ ...recurrenceRule, interval: isNaN(val) ? 1 : val });
+                      }}
+                    />
                   </div>
-                    <div className={styles.formgroup}>
-                      <label>Intervalle :</label>
-                      <input
-                        type="number"
-                        min="1"
-                        value={isNaN(recurrenceRule.interval) ? 1 : recurrenceRule.interval}
-                        onChange={e => {
-                          const val = parseInt(e.target.value, 10);
-                          setRecurrenceRule({ ...recurrenceRule, interval: isNaN(val) ? 1 : val });
-                        }}
-                      />
+                  {recurrenceRule.type === 'WEEKLY' && (
+                    <div className={styles.recurrenceInputGroup}>
+                      <label className={styles.formLabel}>Jours de la semaine :</label>
+                      <div className={styles.recurrenceDaysContainer}>
+                        {['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'].map(day => (
+                          <label key={day} className={styles.recurrenceDayLabel}>
+                            <input
+                              type="checkbox"
+                              checked={recurrenceRule.byDay?.includes(day) || false}
+                              onChange={e => {
+                                const byDay = recurrenceRule.byDay || [];
+                                if (e.target.checked) {
+                                  setRecurrenceRule({ ...recurrenceRule, byDay: [...byDay, day] });
+                                } else {
+                                  setRecurrenceRule({ ...recurrenceRule, byDay: byDay.filter(d => d !== day) });
+                                }
+                              }}
+                            />
+                            <span style={{ marginLeft: '-10rem' }}>{day}</span>
+                          </label>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                {recurrenceRule.type === 'WEEKLY' && (
-                  <div className={styles.formgroup}>
-                    <label>Jours de la semaine :</label>
-                    <div>
-                      {['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'].map(day => (
-                        <label key={day} style={{ marginRight: '0.5rem' }}>
-                          <input
-                            type="checkbox"
-                            checked={recurrenceRule.byDay?.includes(day) || false}
-                            onChange={e => {
-                              const byDay = recurrenceRule.byDay || [];
-                              if (e.target.checked) {
-                                setRecurrenceRule({ ...recurrenceRule, byDay: [...byDay, day] });
-                              } else {
-                                setRecurrenceRule({ ...recurrenceRule, byDay: byDay.filter(d => d !== day) });
-                              }
-                            }}
-                          />
-                          {day}
-                        </label>
-                      ))}
+                  )}
+                  {recurrenceRule.type === 'MONTHLY' && (
+                    <div className={styles.formRow}>
+                      <div className={styles.recurrenceInputGroup}>
+                        <label className={styles.formLabel}>Numéro de semaine :</label>
+                        <select
+                          className={styles.formSelect}
+                          value={recurrenceRule.weekNumber || ''}
+                          onChange={e => setRecurrenceRule({ ...recurrenceRule, weekNumber: e.target.value ? parseInt(e.target.value, 10) : null })}
+                        >
+                          <option value="">--</option>
+                          <option value="1">1er</option>
+                          <option value="2">2ème</option>
+                          <option value="3">3ème</option>
+                          <option value="4">4ème</option>
+                          <option value="-1">Dernier</option>
+                        </select>
+                      </div>
+                      <div className={styles.recurrenceInputGroup}>
+                        <label className={styles.formLabel}>Jour de la semaine :</label>
+                        <select
+                          className={styles.formSelect}
+                          value={recurrenceRule.dayOfWeek || ''}
+                          onChange={e => setRecurrenceRule({ ...recurrenceRule, dayOfWeek: e.target.value })}
+                        >
+                          <option value="">--</option>
+                          <option value="MO">Lundi</option>
+                          <option value="TU">Mardi</option>
+                          <option value="WE">Mercredi</option>
+                          <option value="TH">Jeudi</option>
+                          <option value="FR">Vendredi</option>
+                          <option value="SA">Samedi</option>
+                          <option value="SU">Dimanche</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                )}
-                {recurrenceRule.type === 'MONTHLY' && (
-                  <>
-                    <div className={styles.formgroup}>
-                      <label>Numéro de semaine :</label>
-                      <select
-                        value={recurrenceRule.weekNumber || ''}
-                        onChange={e => setRecurrenceRule({ ...recurrenceRule, weekNumber: e.target.value ? parseInt(e.target.value, 10) : null })}
-                      >
-                        <option value="">--</option>
-                        <option value="1">1er</option>
-                        <option value="2">2ème</option>
-                        <option value="3">3ème</option>
-                        <option value="4">4ème</option>
-                        <option value="-1">Dernier</option>
-                      </select>
-                    </div>
-                    <div className={styles.formgroup}>
-                      <label>Jour de la semaine :</label>
-                      <select
-                        value={recurrenceRule.dayOfWeek || ''}
-                        onChange={e => setRecurrenceRule({ ...recurrenceRule, dayOfWeek: e.target.value })}
-                      >
-                        <option value="">--</option>
-                        <option value="MO">Lundi</option>
-                        <option value="TU">Mardi</option>
-                        <option value="WE">Mercredi</option>
-                        <option value="TH">Jeudi</option>
-                        <option value="FR">Vendredi</option>
-                        <option value="SA">Samedi</option>
-                        <option value="SU">Dimanche</option>
-                      </select>
-                    </div>
-                  </>
-                )}
-                <div className={styles.formgroup}>
-                  <label>Date de fin :</label>
-                  <input
-                    type="date"
-                    value={recurrenceRule.until || ''}
-                    onChange={e => {
-                      let value = e.target.value;
-                      // Convert dd-mm-yyyy to yyyy-mm-dd if needed
-                      if (/^\d{2}-\d{2}-\d{4}$/.test(value)) {
-                        const parts = value.split('-');
-                        value = `${parts[2]}-${parts[1]}-${parts[0]}`;
-                      }
-                      const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(value);
-                      if (isValidDate || value === '') {
-                        setRecurrenceRule({ ...recurrenceRule, until: value });
-                      } else {
-                        // Ignore invalid input or show error if needed
-                        console.warn('Date de fin invalide pour la récurrence');
-                      }
-                    }}
-                  />
+                  )}
                 </div>
+              )}
+              <div className={styles.recurrenceInputGroup}>
+                <label className={styles.formLabel}>Date de fin :</label>
+                <input
+                  className={styles.formInput}
+                  type="date"
+                  value={recurrenceRule.until || ''}
+                  onChange={e => {
+                    let value = e.target.value;
+                    if (/^\d{2}-\d{2}-\d{4}$/.test(value)) {
+                      const parts = value.split('-');
+                      value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                    }
+                    const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(value);
+                    if (isValidDate || value === '') {
+                      setRecurrenceRule({ ...recurrenceRule, until: value });
+                    } else {
+                      console.warn('Date de fin invalide pour la récurrence');
+                    }
+                  }}
+                />
               </div>
-          
-          </div>
+            </div>
           )}
           {error && <p style={{ color: 'red', marginTop: '1rem', marginBottom: '0.5rem' }}>{error}</p>}
           <button type="submit" disabled={submitting} className={`${styles.button} ${mona.className}`}>{submitting ? 'Envoi...' : 'Créer la réservation'}</button>

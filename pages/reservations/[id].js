@@ -1,28 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Layout from '../../components/Layout';
 import Header from '../../components/Header';
+import styles from './reservation.module.css';
+import dashboardStyles from '../dashboard.module.css';
+import { Montserrat } from 'next/font/google';
+
+const mona = Montserrat({
+  subsets: ['latin'],
+});
 
 const daysOfWeek = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
 function RecurrenceOptions({ recurrenceRule, setRecurrenceRule }) {
   const updateRule = (field, value) => {
-    setRecurrenceRule({ ...recurrenceRule, [field]: value });
+    const updatedRule = { ...recurrenceRule, [field]: value };
+    setRecurrenceRule(updatedRule);
   };
 
   const toggleByDay = (day) => {
     const byDay = recurrenceRule.byDay || [];
+    let updatedByDay;
     if (byDay.includes(day)) {
-      updateRule('byDay', byDay.filter(d => d !== day));
+      updatedByDay = byDay.filter(d => d !== day);
     } else {
-      updateRule('byDay', [...byDay, day]);
+      updatedByDay = [...byDay, day];
     }
+    updateRule('byDay', updatedByDay);
   };
 
   return (
-    <div>
-      <label>Type de récurrence :</label>
+    <div className={styles.formSection}>
+      <label className={styles.formLabel}>Type de récurrence :</label>
       <select
+        className={styles.formInput}
         value={recurrenceRule.type || ''}
         onChange={e => updateRule('type', e.target.value)}
       >
@@ -32,75 +44,81 @@ function RecurrenceOptions({ recurrenceRule, setRecurrenceRule }) {
         <option value="monthly">Mensuelle</option>
         <option value="yearly">Annuelle</option>
       </select>
-
-      {recurrenceRule.type === 'weekly' && (
-        <div>
-          <label>Jours de la semaine :</label>
-          <div>
-            {daysOfWeek.map(day => (
-              <label key={day} style={{ marginRight: '0.5rem' }}>
-                <input
-                  type="checkbox"
-                  checked={recurrenceRule.byDay?.includes(day) || false}
-                  onChange={() => toggleByDay(day)}
-                />
-                {day}
-              </label>
-            ))}
+      {recurrenceRule.type && (
+        <div className={styles.formRow}>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Intervalle :</label>
+            <input
+              className={styles.formInput}
+              type="number"
+              min="1"
+              value={recurrenceRule.interval || 1}
+              onChange={e => updateRule('interval', parseInt(e.target.value, 10))}
+            />
           </div>
+          {recurrenceRule.type === 'weekly' && (
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>Jours de la semaine :</label>
+              <div className={styles.recurrenceDaysContainer}>
+                {daysOfWeek.map(day => (
+                  <label key={day} className={styles.recurrenceDayLabel}>
+                    <input
+                      type="checkbox"
+                      checked={recurrenceRule.byDay?.includes(day)}
+                      onChange={() => toggleByDay(day)}
+                    />
+                    {day}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+          {recurrenceRule.type === 'monthly' && (
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Numéro de semaine :</label>
+                <select
+                  className={styles.formInput}
+                  value={recurrenceRule.weekNumber || ''}
+                  onChange={e => updateRule('weekNumber', e.target.value ? parseInt(e.target.value, 10) : '')}
+                >
+                  <option value="">--</option>
+                  <option value="1">1er</option>
+                  <option value="2">2ème</option>
+                  <option value="3">3ème</option>
+                  <option value="4">4ème</option>
+                  <option value="-1">Dernier</option>
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Jour de la semaine :</label>
+                <select
+                  className={styles.formInput}
+                  value={recurrenceRule.dayOfWeek || ''}
+                  onChange={e => updateRule('dayOfWeek', e.target.value)}
+                >
+                  <option value="">--</option>
+                  {daysOfWeek.map(day => (
+                    <option key={day} value={day}>
+                      {day}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
         </div>
       )}
-
-      {recurrenceRule.type === 'monthly' && (
-        <>
-          <div>
-            <label>Numéro de semaine :</label>
-            <select
-              value={recurrenceRule.weekNumber || ''}
-              onChange={e => updateRule('weekNumber', e.target.value ? parseInt(e.target.value, 10) : null)}
-            >
-              <option value="">--</option>
-              <option value="1">1er</option>
-              <option value="2">2ème</option>
-              <option value="3">3ème</option>
-              <option value="4">4ème</option>
-              <option value="-1">Dernier</option>
-            </select>
-          </div>
-          <div>
-            <label>Jour de la semaine :</label>
-            <select
-              value={recurrenceRule.dayOfWeek || ''}
-              onChange={e => updateRule('dayOfWeek', e.target.value)}
-            >
-              <option value="">--</option>
-              {daysOfWeek.map(day => (
-                <option key={day} value={day}>
-                  {day}
-                </option>
-              ))}
-            </select>
-          </div>
-        </>
-      )}
-
-      <div>
-        <label>Date de fin :</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Date de fin :</label>
         <input
+          className={styles.formInput}
           type="date"
           value={recurrenceRule.until || ''}
           onChange={e => {
-            let value = e.target.value;
-            // Convert dd-mm-yyyy to yyyy-mm-dd if needed
-            if (/^\d{2}-\d{2}-\d{4}$/.test(value)) {
-              const parts = value.split('-');
-              value = `${parts[2]}-${parts[1]}-${parts[0]}`;
-            }
-            const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(value);
-            if (isValidDate || value === '') {
+            const value = e.target.value;
+            if (value === '' || !isNaN(new Date(value).getTime())) {
               updateRule('until', value);
-            } else {
-              console.warn('Date de fin invalide pour la récurrence');
             }
           }}
         />
@@ -133,7 +151,6 @@ export default function ReservationForm() {
 
   useEffect(() => {
     if (id) {
-      // Fetch reservation data for editing
       fetch(`/api/reservations/${id}`)
         .then(res => res.json())
         .then(data => {
@@ -150,7 +167,6 @@ export default function ReservationForm() {
             departement: data.departement || '',
           });
           if (data.recurrenceRule) {
-            // Parse recurrenceRule string to object if needed
             const parseRRuleString = (rruleString) => {
               const ruleParts = {};
               rruleString.split(';').forEach(part => {
@@ -159,17 +175,29 @@ export default function ReservationForm() {
                   ruleParts[key.toLowerCase()] = value;
                 }
               });
-            const recurrenceObj = {
-              type: ruleParts['freq'] ? ruleParts['freq'].toLowerCase() : '',
-              interval: ruleParts['interval'] ? parseInt(ruleParts['interval'], 10) : 1,
-              weekNumber: ruleParts['bysetpos'] ? parseInt(ruleParts['bysetpos'], 10) : null,
-              dayOfWeek: ruleParts['byday'] && ruleParts['byday'].length === 2 ? ruleParts['byday'] : null,
-              byDay: ruleParts['byday'] ? ruleParts['byday'].split(',') : [],
-              until: ruleParts['until'] ? ruleParts['until'].slice(0,4) + '-' + ruleParts['until'].slice(4,6) + '-' + ruleParts['until'].slice(6,8) : '',
-            };
+              let untilDate = '';
+              if (ruleParts['until']) {
+                const untilStr = ruleParts['until'];
+                const year = untilStr.substring(0, 4);
+                const month = untilStr.substring(4, 6);
+                const day = untilStr.substring(6, 8);
+                untilDate = `${year}-${month}-${day}`;
+              }
+              const recurrenceObj = {
+                type: ruleParts['freq'] ? ruleParts['freq'].toLowerCase() : '',
+                interval: ruleParts['interval'] ? parseInt(ruleParts['interval'], 10) : 1,
+                weekNumber: ruleParts['bysetpos'] ? parseInt(ruleParts['bysetpos'], 10) : null,
+                dayOfWeek: ruleParts['byday'] ? (ruleParts['byday'].length === 2 ? ruleParts['byday'] : ruleParts['byday'].split(',')[0]) : null,
+                byDay: ruleParts['byday'] ? ruleParts['byday'].split(',') : [],
+                until: untilDate,
+              };
               return recurrenceObj;
             };
-            setRecurrenceRule(parseRRuleString(data.recurrenceRule));
+            const parsedRule = parseRRuleString(data.recurrenceRule);
+            if (data.endDate) {
+              parsedRule.until = data.endDate;
+            }
+            setRecurrenceRule(parsedRule);
             setRecurrenceEnabled(true);
           }
         })
@@ -220,52 +248,51 @@ export default function ReservationForm() {
     return rrule;
   };
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setError(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
 
-      if (!validateForm()) return;
+    if (!validateForm()) return;
 
-      setSubmitting(true);
+    setSubmitting(true);
 
-      // Determine actionScope from query param or default to 'single'
-      const urlParams = new URLSearchParams(window.location.search);
-      const actionScope = urlParams.get('actionScope') || 'single';
+    const urlParams = new URLSearchParams(window.location.search);
+    const actionScope = urlParams.get('actionScope') || 'single';
 
-      const payload = {
-        ...reservation,
-        status: 'CONFIRMED',
-        recurrenceRule: recurrenceEnabled ? serializeRecurrenceRule(recurrenceRule) : null,
-      };
-
-      try {
-        const res = await fetch(id ? `/api/reservations/${id}?actionScope=${actionScope}` : '/api/reservations', {
-          method: id ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) {
-          let errorMessage = 'Erreur lors de la sauvegarde de la réservation';
-          try {
-            const data = await res.json();
-            errorMessage = data.message || data.error || JSON.stringify(data);
-            if (errorMessage.includes('Créneau déjà réservé')) {
-              errorMessage = 'Créneau déjà réservé. Veuillez choisir un autre créneau horaire.';
-            } else if (errorMessage.includes('La réservation doit être entre 7h et 19h')) {
-              errorMessage = 'La réunion doit être programmée entre 7h et 19h.';
-            }
-          } catch (e) {
-            errorMessage = "Erreur lors du traitement de la réponse d'erreur";
-          }
-          throw new Error(errorMessage);
-        }
-        router.push('/reservations');
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setSubmitting(false);
-      }
+    const payload = {
+      ...reservation,
+      status: 'CONFIRMED',
+      recurrenceRule: recurrenceEnabled ? serializeRecurrenceRule(recurrenceRule) : null,
     };
+
+    try {
+      const res = await fetch(id ? `/api/reservations/${id}?actionScope=${actionScope}` : '/api/reservations', {
+        method: id ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        let errorMessage = 'Erreur lors de la sauvegarde de la réservation';
+        try {
+          const data = await res.json();
+          errorMessage = data.message || data.error || JSON.stringify(data);
+          if (errorMessage.includes('Créneau déjà réservé')) {
+            errorMessage = 'Créneau déjà réservé. Veuillez choisir un autre créneau horaire.';
+          } else if (errorMessage.includes('La réservation doit être entre 7h et 19h')) {
+            errorMessage = 'La réunion doit être programmée entre 7h et 19h.';
+          }
+        } catch (e) {
+          errorMessage = "Erreur lors du traitement de la réponse d'erreur";
+        }
+        throw new Error(errorMessage);
+      }
+      router.push('/reservations');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const handleCancel = async () => {
     if (!id) return;
@@ -302,158 +329,196 @@ export default function ReservationForm() {
   };
 
   return (
-    <>
-      <Header />
-      <main style={{ padding: '2rem' }}>
-        <h1>{id ? 'Modifier la réservation' : 'Créer une réservation'}</h1>
-        <nav style={{ marginBottom: '1rem' }}>
-          <Link href="/">Accueil</Link> | <Link href="/reservations">Liste des réservations</Link>
-        </nav>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Date:</label>
-            <input
-              type="date"
-              value={reservation.date}
-              onChange={e => handleChange('date', e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Heure début:</label>
-            <input
-              type="time"
-              value={reservation.startTime}
-              onChange={e => handleChange('startTime', e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Heure fin:</label>
-            <input
-              type="time"
-              value={reservation.endTime}
-              onChange={e => handleChange('endTime', e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Objet:</label>
-            <input
-              type="text"
-              value={reservation.subject}
-              onChange={e => handleChange('subject', e.target.value)}
-              required
-            />
-          </div>
-          <fieldset>
-            <legend>Organisateur</legend>
-            <div>
-              <label>Nom:</label>
-              <input
-                type="text"
-                value={reservation.organizer?.name || ''}
-                onChange={e => handleChange('organizer', { ...reservation.organizer, name: e.target.value })}
-                required
-              />
+    <Layout>
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem',marginLeft: '700px'}}>
+        <main className={`${mona.className} ${styles.container}`}>
+          <Header />
+          <header className={styles.pageHeader}>
+            <div className={styles.headerContent}>
+              <h1>{id ? 'Modifier la réservation' : 'Créer une réservation'}</h1>
+              <nav className={styles.nav}>
+                <Link href="/dashboard" className={styles.navLink}>Accueil</Link>
+                <span className={styles.navSeparator}>|</span>
+                <Link href="/reservations" className={styles.navLink}>Liste des réservations</Link>
+              </nav>
             </div>
-            <div>
-              <label>Email:</label>
-              <input
-                type="email"
-                value={reservation.organizer?.email || ''}
-                onChange={e => handleChange('organizer', { ...reservation.organizer, email: e.target.value })}
-                required
-              />
+            <div className={styles.actionButtons} style={{ justifyContent: 'flex-start', gap: '2rem', marginLeft: '20px', color: 'white' }}>
+              {id && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className={styles.button}
+                    style={{ backgroundColor: 'red', color: 'white' }}
+                  >
+                    Annuler la réservation
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancelSeries}
+                    className={styles.button}
+                    style={{ backgroundColor: 'red', color: 'white' }}
+                    title="Annuler toute la série de réservations"
+                  >
+                    Annuler la série
+                  </button>
+                </>
+              )}
             </div>
-          </fieldset>
-          <div>
-            <label>Type de réservation:</label>
-            <select
-              value={reservation.reservationType || 'presentiel'}
-              onChange={e => handleChange('reservationType', e.target.value)}
-            >
-              <option value="presentiel">Présentiel</option>
-              <option value="hybride">Hybride</option>
-            </select>
-          </div>
-          <div>
-            <label>Équipement:</label>
-            <input
-              type="text"
-              value={reservation.equipment || ''}
-              onChange={e => handleChange('equipment', e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Disposition:</label>
-            <select
-              value={reservation.disposition || 'en U'}
-              onChange={e => handleChange('disposition', e.target.value)}
-            >
-              <option value="en U">En U</option>
-              <option value="theatral">Théâtral</option>
-              <option value="Ronde">Ronde</option>
-            </select>
-          </div>
-          <div>
-            <label>Nombre de participants:</label>
-            <input
-              type="number"
-              min="0"
-              value={reservation.participantsCount || 0}
-              onChange={e => handleChange('participantsCount', parseInt(e.target.value, 10))}
-            />
-          </div>
-          <div>
-            <label>Département:</label>
-            <input
-              type="text"
-              value={reservation.departement || ''}
-              onChange={e => handleChange('departement', e.target.value)}
-            />
-          </div>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                checked={recurrenceEnabled}
-                onChange={e => setRecurrenceEnabled(e.target.checked)}
-              />
-              Réservation récurrente
-            </label>
-          </div>
-          {recurrenceEnabled && (
-            <RecurrenceOptions recurrenceRule={recurrenceRule} setRecurrenceRule={setRecurrenceRule} />
-          )}
-          {error && <p style={{ color: 'red', marginTop: '1rem', marginBottom: '0.5rem' }}>{error}</p>}
-          <button type="submit" disabled={submitting}>
-            {submitting ? 'Envoi...' : id ? 'Mettre à jour la réservation' : 'Créer la réservation'}
-          </button>
-          {id && (
-            <>
-              <button
-                type="button"
-                onClick={handleCancel}
-                style={{ marginLeft: '1rem', backgroundColor: 'red', color: 'white' }}
-              >
-                Annuler la réservation
-              </button>
-              <button
-                type="button"
-                onClick={handleCancelSeries}
-                style={{ marginLeft: '1rem', backgroundColor: 'darkred', color: 'white' }}
-                title="Annuler toute la série de réservations"
-              >
-                Annuler la série
-              </button>
-            </>
-          )}
-        </form>
-      </main>
-      <footer style={{ backgroundColor: '#004080', padding: '1rem', color: 'white', marginTop: '2rem', textAlign: 'center' }}>
-        &copy; 2024 Economic Development Board Madagascar
-      </footer>
-    </>
+          </header>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formSection}>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Date:</label>
+                  <input
+                    type="date"
+                    value={reservation.date}
+                    onChange={e => handleChange('date', e.target.value)}
+                    required
+                    className={styles.formInput}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Heure début:</label>
+                  <input
+                    type="time"
+                    value={reservation.startTime}
+                    onChange={e => handleChange('startTime', e.target.value)}
+                    required
+                    className={styles.formInput}
+                  />
+                </div>
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Heure fin:</label>
+                  <input
+                    type="time"
+                    value={reservation.endTime}
+                    onChange={e => handleChange('endTime', e.target.value)}
+                    required
+                    className={styles.formInput}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Objet:</label>
+                  <input
+                    type="text"
+                    value={reservation.subject}
+                    onChange={e => handleChange('subject', e.target.value)}
+                    required
+                    className={styles.formInput}
+                  />
+                </div>
+              </div>
+              <fieldset className={styles.formSection}>
+                <legend>Organisateur</legend>
+                <div className={styles.formRow}>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Nom:</label>
+                    <input
+                      type="text"
+                      value={reservation.organizer?.name || ''}
+                      onChange={e => handleChange('organizer', { ...reservation.organizer, name: e.target.value })}
+                      required
+                      className={styles.formInput}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Email:</label>
+                    <input
+                      type="email"
+                      value={reservation.organizer?.email || ''}
+                      onChange={e => handleChange('organizer', { ...reservation.organizer, email: e.target.value })}
+                      required
+                      className={styles.formInput}
+                    />
+                  </div>
+                </div>
+              </fieldset>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Type de réservation:</label>
+                  <select
+                    value={reservation.reservationType || 'presentiel'}
+                    onChange={e => handleChange('reservationType', e.target.value)}
+                    className={styles.formInput}
+                  >
+                    <option value="presentiel">Présentiel</option>
+                    <option value="hybride">Hybride</option>
+                  </select>
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Équipement:</label>
+                  <input
+                    type="text"
+                    value={reservation.equipment || ''}
+                    onChange={e => handleChange('equipment', e.target.value)}
+                    className={styles.formInput}
+                  />
+                </div>
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Disposition:</label>
+                  <select
+                    value={reservation.disposition || 'en U'}
+                    onChange={e => handleChange('disposition', e.target.value)}
+                    className={styles.formInput}
+                  >
+                    <option value="en U">En U</option>
+                    <option value="theatral">Théâtral</option>
+                    <option value="Ronde">Ronde</option>
+                  </select>
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Nombre de participants:</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={reservation.participantsCount || 0}
+                    onChange={e => handleChange('participantsCount', parseInt(e.target.value, 10))}
+                    className={styles.formInput}
+                  />
+                </div>
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Département:</label>
+                <input
+                  type="text"
+                  value={reservation.departement || ''}
+                  onChange={e => handleChange('departement', e.target.value)}
+                  className={styles.formInput}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>
+                  <input
+                    type="checkbox"
+                    checked={recurrenceEnabled}
+                    onChange={e => setRecurrenceEnabled(e.target.checked)}
+                  />
+                  {' '}Réservation récurrente
+                </label>
+              </div>
+              {recurrenceEnabled && (
+                <RecurrenceOptions
+                  key={JSON.stringify(recurrenceRule)}
+                  recurrenceRule={recurrenceRule}
+                  setRecurrenceRule={setRecurrenceRule}
+                />
+              )}
+              {error && <p className={dashboardStyles.orangeGradient} style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>{error}</p>}
+              <div className={styles.buttonGroup}>
+                <button type="submit" disabled={submitting} className={styles.button}>
+                  {submitting ? 'Envoi...' : id ? 'Mettre à jour la réservation' : 'Créer la réservation'}
+                </button>
+              </div>
+            </div>
+          </form>
+        </main>
+      </div>
+    </Layout>
   );
 }

@@ -1,0 +1,74 @@
+.pageContainer {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(43, 108, 176, 0.1);
+  margin-left: 650px;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #d1d9e6;
+  color: #2c3e50;
+}
+
+.table th {
+  background-color: #2b6cb0;
+  color: white;
+  font-weight: 600;
+}
+
+.table tr:hover {
+  background-color: #f7f9fc;
+}
+
+.selectInput {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #2c3e50;
+  margin-left: 0.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.textInput {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #2c3e50;
+  margin-left: 0.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.selectInput:focus, .textInput:focus {
+  border-color: #6b46c1;
+  outline: none;
+}
+
+/* New style for centering and spacing filters on email-logs page */
+.filtersContainer {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}

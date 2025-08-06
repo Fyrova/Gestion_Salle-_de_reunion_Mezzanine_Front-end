@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
+import Layout from '../components/Layout';
+import styles from './dashboard.module.css';
+import footerStyles from '../components/Footer.module.css';
+import { Montserrat } from 'next/font/google';
+
+const mona = Montserrat({
+  subsets: ['latin'],
+});
 
 export default function Rapport() {
   const [date, setDate] = useState('');
@@ -57,52 +65,73 @@ export default function Rapport() {
   return (
     <>
       <Header />
-      <main style={{ padding: '2rem' }}>
-        <h1>Rapport des réservations</h1>
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="date">Sélectionnez une date : </label>
-          <input
-            type="date"
-            id="date"
-            value={date}
-            onChange={handleDateChange}
-          />
-        </div>
-        {loading && <p>Chargement des réservations...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {reservations.length > 0 && (
-          <>
-            <div id="printableArea">
-              <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Heure début</th>
-                    <th>Heure fin</th>
-                    <th>Objet</th>
-                    <th>Organisateur</th>
-                    <th>Statut</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reservations.map(reservation => (
-                    <tr key={reservation.id}>
-                      <td>{reservation.date}</td>
-                      <td>{reservation.startTime}</td>
-                      <td>{reservation.endTime}</td>
-                      <td>{reservation.subject}</td>
-                      <td>{reservation.organizer?.name || 'N/A'}</td>
-                      <td>{reservation.status}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      <Layout>
+        <main className={`${styles.pageContainer}`}>
+          <h1 className={styles.title}>LISTE DES RESERVATIONS</h1>
+          <div className={styles.filtersCalendarContainer}>
+            <div className={styles.filtersColumn}>
+              <div className={styles.filters} style={{marginLeft:'500px'}}>
+                <label>Filtrer par date : </label>
+                <input
+                  type="date"
+                  id="date"
+                  value={date}
+                  onChange={handleDateChange}
+                  className={styles.filterSelect}
+                  style={{ width: '30%' }}
+                />
+              </div>
             </div>
-            <button onClick={handlePrint} style={{ marginTop: '1rem' }}>Imprimer</button>
-          </>
-        )}
-        {reservations.length === 0 && !loading && !error && <p>Aucune réservation confirmée pour cette date.</p>}
-      </main>
+          </div>
+          {loading && <p>Chargement des réservations...</p>}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {reservations.length > 0 && (
+            <>
+              <div id="printableArea" style={{ width: '100%' }}>
+                <table className={styles.table} style={{ width: '100%' }}>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Heure début</th>
+                      <th>Heure fin</th>
+                      <th>Objet</th>
+                      <th>Organisateur</th>
+                      <th>Département</th>
+                      <th>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reservations.map(reservation => (
+                      <tr key={reservation.id}>
+                        <td>{reservation.date}</td>
+                        <td>{reservation.startTime}</td>
+                        <td>{reservation.endTime}</td>
+                        <td>{reservation.subject}</td>
+                        <td>{reservation.organizer?.name || 'N/A'}</td>
+                        <td>{reservation.departement || 'N/A'}</td>
+                        <td>
+                          <span className={`${styles.status} ${
+                            reservation.status === 'CONFIRMED' ? styles['status-confirmed'] :
+                            reservation.status === 'CANCELLED' ? styles['status-cancelled'] : ''
+                          }`}>
+                            {reservation.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <button onClick={handlePrint} className={`${styles.button}`} style={{ marginTop: '1rem', backgroundColor: '#4299e1', color: 'white' }}>Imprimer</button>
+            </>
+          )}
+        </main>
+      </Layout>
+      <footer style={{backgroundColor:'#6b46c1',color: '#ccc',textAlign: 'center',paddingLeft:'150px', position:'fixed', fontSize:'1rem'
+        ,marginTop:'2rem',boxShadow:'0 -2px 8px rgba(0, 0, 0, 0.2)',display:'flex',
+        height:'60px',bottom:'0',width:'100%',justifyContent:'center',alignItems:'center'}}>
+        © {new Date().getFullYear()} EDBM - Gestion de la salle Mezzanine
+      </footer>
     </>
   );
 }

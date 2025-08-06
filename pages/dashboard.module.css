@@ -1,15 +1,264 @@
+/* Modern UI/UX Dashboard Styles - Palette violette et couleurs supplémentaires */
+.pageContainer {
+  padding: 2rem 3rem 6rem 370px; /* adjusted for sidebar width */
+  font-family: 'Inter', Arial, sans-serif;
+  background: #f5f5f5; /* changed from gradient to light gray */
+  min-height: 100vh;
+  color: #2c5282; /* changed from violet to blue */
+}
+
+.orangeGradient {
+  background: linear-gradient(to right, #dd6b20, #f6ad55); /* orange */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  color: #2a4365; /* changed from #111 to dark blue */
+  letter-spacing: 1px;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.purpleText {
+  color: #6b46c1; /* violet */
+  font-weight: 600;
+}
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(to right, #4299e1, #2b6cb0); /* blue gradient */
+  border-radius: 2px;
+}
+
+.section {
+  margin-bottom: 6rem;
+  background: #FFF;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 6px 18px rgba(66, 153, 225, 0.10); /* blue shadow */
+  border: 1px solid #bee3f8; /* light blue border */
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.filterButtons {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.statusFilterButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.filterButton {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #000;
+  border-radius: 4px;
+  transition: color 0.3s ease;
+}
+
+.filterButton.active {
+  color: #6b46c1; /* violet */
+  font-weight: bold;
+  border-bottom: 2px solid #6b46c1;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+  justify-items: center;
+}
+
+.statusFilterButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.statCard {
+  background: #FFF;
+  border: 1px solid #63b3ed; /* sky blue border */
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 14px rgba(66, 153, 225, 0.10); /* blue shadow */
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.statCard:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(66, 153, 225, 0.18); /* blue shadow */
+  border-color: #3182ce; /* darker blue */
+}
+
+.statNumber {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to right, #dd6b20, #f6ad55); /* orange */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.statNumber:nth-child(1) {
+  background: linear-gradient(to right, #38a169, #48bb78); /* green */
+}
+
+.statNumber:nth-child(2) {
+  background: linear-gradient(to right, #dd6b20, #f6ad55); /* orange */
+}
+
+.statNumber:nth-child(3) {
+  background: linear-gradient(to right, #3182ce, #63b3ed); /* blue */
+}
+
+.statTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color:#6b46c1 ; /* blue */
+  letter-spacing: 0.5px;
+}
+
+.tableSection h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c5282; /* orange */
+  margin-bottom: 2rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+.tableSection h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right,#2c5282, transparent); /* orange gradient */
+}
+
 .table {
-    border: none;
-    width: 100%;
-    border-collapse: collapse; /* replaces cellspacing */
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #FFF;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(66, 153, 225, 0.10); /* blue shadow */
 }
-
-.table td, .table th {
-    padding: 8px; /* replaces cellpadding */
-    border-bottom: 1px solid #a25598ed;
-}
-
 .table th {
-    background-color: #a25598ed;
-    color: white;
+  background: #3182ce; /* blue */
+  color: #FFF;
+  font-weight: 700;
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #3182ce;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.table td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #bee3f8; /* light blue */
+  color: #2c5282; /* blue */
+}
+.table tr:last-child td {
+  border-bottom: none;
+}
+.table tbody tr {
+  transition: background-color 0.25s ease;
+}
+.table tbody tr:hover {
+  background-color: #ebf8ff; /* light blue */
+}
+
+.noDataMessage {
+  font-size: 1.1rem;
+  color: #4a5568; /* gray */
+  text-align: center;
+  padding: 2.5rem;
+  background: #FFF;
+  border-radius: 14px;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.08); /* blue shadow */
+}
+
+/* Status Badges */
+.status {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.status-confirmed {
+  background-color: rgba(34, 197, 94, 0.15); /* light green */
+  color: #22c55e; /* green */
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.status-cancelled {
+  background-color: rgba(251, 191, 36, 0.15); /* light orange */
+  color: #f59e0b; /* orange */
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+/* Responsive Design */
+@media (max-width: 900px) {
+  .pageContainer {
+    padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+  }
+  .title {
+    font-size: 2rem;
+  }
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .statNumber {
+    font-size: 2.2rem;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

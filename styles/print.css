@@ -1,0 +1,47 @@
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  #printableArea {
+    border: 1px solid #000 !important;
+    padding: 10px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    box-shadow: none !important;
+  }
+
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin-left:20px;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  th, td {
+    border: 1px solid #000 !important;
+    padding: 8px !important;
+    color: black !important;
+    background: white !important;
+  }
+
+  th {
+    background-color: #f0f0f0 !important;
+    font-weight: normal !important;
+  }
+
+  tr {
+    box-shadow: none !important;
+  }
+
+  /* Fix missing left vertical border on table */
+  
+
+  /* Remove any shadows or colors from other elements */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}

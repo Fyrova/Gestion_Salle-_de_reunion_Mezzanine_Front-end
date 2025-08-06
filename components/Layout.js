@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from './Header.js';
+import Footer from './Footer';
 
 const Layout = ({ children }) => {
   return (
@@ -8,8 +9,8 @@ const Layout = ({ children }) => {
         html, body {
           margin: 0;
           padding: 0;
-          background-color: black;
-          color: white;
+          background-color: #f5f5f5;
+          color: #2c5282;
           width: 100%;
           height: 100%;
           overflow-x: hidden;
@@ -26,6 +27,7 @@ const Layout = ({ children }) => {
         <main>
           {children}
         </main>
+        <Footer />
       </div>
     </>
   );

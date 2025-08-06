@@ -1,36 +1,84 @@
 /* MyCalendar.module.css */
 .calendarContainer {
   padding: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.15);
+  max-width: 100%;
+  margin: 0 auto;
+  padding-left:20px;
 }
 
 .reactCalendar {
-  background: #f0ebf3;
-  border-radius: 10px;
-  padding: 10px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 15px;
   max-width: 100%;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-  line-height: 1.125em;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.15);
+  line-height: 1.25em;
   border: none;
-  
+  font-family: 'Montserrat', sans-serif;
+  color: #2c3e50;
+  transition: box-shadow 0.3s ease;
+}
+
+.reactCalendar:hover {
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.3);
+}
+
+.reactCalendar .react-calendar__navigation button {
+  color: #7c3aed;
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.reactCalendar .react-calendar__navigation button:hover {
+  color: #4c1d95;
+}
+
+.reactCalendar .react-calendar__month-view__weekdays {
+  color: #7c3aed;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.reactCalendar .react-calendar__month-view__days__day--neighboringMonth {
+  color: #a3a3a3;
 }
 
 .reactCalendar .react-calendar__tile {
-  padding: 10px;
-  font-size: 14px;
-  background-color: white;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 12px;
+  border: 1px solid #d1c4e9;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+  color: #000000 !important;
+}
+
+.reactCalendar .react-calendar__tile:hover {
+  background-color: #e0d7f7;
+  border-color: #7c3aed;
 }
 
 .reactCalendar .react-calendar__tile--active {
-  background-color: #ff5722; /* custom active day color */
+  background-color: #7c3aed; /* custom active day color */
   color: white;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.6);
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
-  background-color: #ef4444;
+  width: 8px;
+  height: 8px;
+  background-color: #48bb78;
   border-radius: 50%;
-  margin: 4px auto 0;
+  margin: 6px auto 0;
+  transition: background-color 0.3s ease;
 }
