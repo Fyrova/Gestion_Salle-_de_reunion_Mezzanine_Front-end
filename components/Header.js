@@ -2,12 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Header.module.css';
-import { Montserrat } from 'next/font/google';
 import { useRouter } from 'next/router';
-
-const mona = Montserrat({
-  subsets: ['latin'],
-});
 
 export default function Header() {
   const router = useRouter();

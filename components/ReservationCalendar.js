@@ -10,10 +10,12 @@ const Calendar = dynamic(() => import('react-calendar'), { ssr: false });
 const ReservationCalendar = ({ value, onChange, reservations }) => {
   const tileContent = ({ date, view }) => {
     if (view === 'month') {
-      const hasReservations = reservations.some(
-        (reservation) => new Date(reservation.date).toDateString() === date.toDateString()
+      const hasConfirmedReservations = reservations.some(
+        (reservation) => 
+          new Date(reservation.date).toDateString() === date.toDateString() && 
+          reservation.status === 'CONFIRMED'
       );
-      return hasReservations ? <div className={styles.dot} /> : null;
+      return hasConfirmedReservations ? <div className={styles.dot} /> : null;
     }
     return null;
   };

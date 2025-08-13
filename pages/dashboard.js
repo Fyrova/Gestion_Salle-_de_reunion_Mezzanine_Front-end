@@ -53,10 +53,10 @@ export default function Dashboard() {
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
 
-  // Réservations prévues pour aujourd'hui (toujours affichées)
+  // Réservations prévues pour aujourd'hui (CONFIRMED uniquement)
   const todaysReservations = useMemo(() => {
     return reservations.filter(r => {
-      return r.date && new Date(r.date).toDateString() === todayStr;
+      return r.date && new Date(r.date).toDateString() === todayStr && r.status === 'CONFIRMED';
     });
   }, [reservations, todayStr]);
 
@@ -68,12 +68,12 @@ export default function Dashboard() {
     });
   }, [reservations, todayStr]);
 
-  // Réservations créées ce mois-ci
+  // Réservations créées ce mois-ci (CONFIRMED uniquement)
   const reservationsMadeThisMonth = useMemo(() => {
     return reservations.filter(r => {
       if (!r.createdAt) return false;
       const createdAt = new Date(r.createdAt);
-      return createdAt.getMonth() === currentMonth && createdAt.getFullYear() === currentYear;
+      return createdAt.getMonth() === currentMonth && createdAt.getFullYear() === currentYear && r.status === 'CONFIRMED';
     });
   }, [reservations, currentMonth, currentYear]);
 
@@ -87,23 +87,23 @@ export default function Dashboard() {
     }, 0);
   }, [todaysReservations]);
 
-  // Données pour le graphique (réservations prévues groupées par période)
+  // Données pour le graphique (réservations prévues par créneau horaire - CONFIRMED uniquement)
   const reservationsChartData = useMemo(() => {
     const dataMap = new Map();
 
     // Traitement différent selon la période sélectionnée
     reservations.forEach(r => {
-      if (!r.date) return;
+      if (!r.date || r.status !== 'CONFIRMED') return;
       
       const resDate = new Date(r.date);
       let periodKey, periodLabel;
 
       switch (filterPeriod) {
         case 'day':
-          // Groupement par heure pour le jour en cours
+          // Groupement par créneau horaire pour le jour en cours
           if (resDate.toDateString() === todayStr) {
-            periodKey = `hour_${resDate.getHours()}`;
-            periodLabel = `${resDate.getHours()}h`;
+            periodKey = `${r.startTime}-${r.endTime}`;
+            periodLabel = `${r.startTime} - ${r.endTime}`;
           }
           break;
         
@@ -146,7 +146,12 @@ export default function Dashboard() {
     
     switch (filterPeriod) {
       case 'day':
-        return result.sort((a, b) => parseInt(a.period) - parseInt(b.period));
+        // Trier par heure de début
+        return result.sort((a, b) => {
+          const timeA = a.period.split(' - ')[0];
+          const timeB = b.period.split(' - ')[0];
+          return timeA.localeCompare(timeB);
+        });
       case 'week':
         return result.sort((a, b) => ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'].indexOf(a.period) - 
                                      ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'].indexOf(b.period));
@@ -193,13 +198,17 @@ export default function Dashboard() {
         <section className={style.section}>
           <div className={style.statsGrid}>
             <StatContainer 
-              stats={reservationsMadeToday.length} 
-              titre={"Réservations faites aujourd'hui"} 
+              stats={todaysReservations.length} 
+              titre={"Réservations prévues aujourd'hui"} 
               colorClass="greenText" 
             />
             <StatContainer 
-              stats={reservationsMadeThisMonth.length} 
-              titre={"Réservations faites ce mois-ci"} 
+              stats={reservations.filter(r => {
+                if (!r.date) return false;
+                const resDate = new Date(r.date);
+                return resDate.getMonth() === currentMonth && resDate.getFullYear() === currentYear && r.status === 'CONFIRMED';
+              }).length} 
+              titre={"Réservations prévues ce mois-ci"} 
               colorClass="orangeText" 
             />
             <StatContainer 
@@ -273,11 +282,11 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Section Réservations prévues aujourd'hui */}
+        {/* Section Réservations prévues aujourd'hui (statut CONFIRMED uniquement) */}
         <section className={style.tableSection}>
-          <h2 className={style.blueUnderlineTitle}>Réservations prévues aujourd'hui</h2>
-          {todaysReservations.length === 0 ? (
-            <p className={style.noDataMessage}>Aucune réservation prévue pour aujourd'hui.</p>
+          <h2 className={style.blueUnderlineTitle}>Réservations prévues aujourd'hui (Confirmées)</h2>
+          {todaysReservations.filter(r => r.status === 'CONFIRMED').length === 0 ? (
+            <p className={style.noDataMessage}>Aucune réservation confirmée prévue pour aujourd'hui.</p>
           ) : (
             <table className={style.table}>
               <thead>
@@ -292,7 +301,7 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {todaysReservations.map(reservation => (
+                {todaysReservations.filter(r => r.status === 'CONFIRMED').map(reservation => (
                   <tr key={reservation.id}>
                   <td>{reservation.date}</td>
                   <td>{reservation.startTime}</td>
@@ -300,10 +309,7 @@ export default function Dashboard() {
                   <td>{reservation.subject}</td>
                   <td>{reservation.organizer?.name || 'N/A'}</td>
                   <td>{reservation.departement || 'N/A'}</td>
-                  <td><span className={`${
-                    reservation.status === 'CONFIRMED' ? style['status-confirmed'] :
-                    reservation.status === 'CANCELLED' ? style['status-cancelled'] : ''
-                    }`}>
+                  <td><span className={`${style['status-confirmed']}`}>
                     {reservation.status}
                      </span></td>
                 </tr>

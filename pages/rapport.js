@@ -14,14 +14,17 @@ export default function Rapport() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [filterType, setFilterType] = useState('day'); // day, week, month
 
-  const fetchReservations = (selectedDate) => {
+  const fetchReservations = (selectedDate, selectedFilterType) => {
     if (!selectedDate) {
       setReservations([]);
       return;
     }
+    
     setLoading(true);
-    const url = `http://localhost:8080/api/reservations?date=${selectedDate}&status=CONFIRMED&view=planned`;
+    let url = `http://localhost:8080/api/reservations?date=${selectedDate}&status=CONFIRMED&periodType=${selectedFilterType}`;
+    
     fetch(url)
       .then(res => {
         if (!res.ok) {
@@ -42,17 +45,37 @@ export default function Rapport() {
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
     setDate(selectedDate);
-    fetchReservations(selectedDate);
+    fetchReservations(selectedDate, filterType);
+  };
+
+  const handleFilterTypeChange = (e) => {
+    const selectedFilterType = e.target.value;
+    setFilterType(selectedFilterType);
+    if (date) {
+      fetchReservations(date, selectedFilterType);
+    }
   };
 
   const handlePrint = () => {
     const printContents = document.getElementById('printableArea').innerHTML;
     const originalContents = document.body.innerHTML;
+    
+    let title = '';
+    switch (filterType) {
+      case 'week':
+        title = `Rapport des réservations prévues la semaine du ${date}`;
+        break;
+      case 'month':
+        title = `Rapport des réservations prévues le mois du ${date}`;
+        break;
+      default:
+        title = `Rapport des réservations prévues le ${date}`;
+    }
 
     document.body.innerHTML = `
       <div style="text-align: center; margin-bottom: 20px;">
         <img src="/logoEDBM-auth.822bbb75.png" alt="EDBM Logo" style="width: 100px; height: auto;"/>
-        <h2>Rapport des réservations prévues le ${date}</h2>
+        <h2>${title}</h2>
       </div>
       <div>${printContents}</div>
     `;
@@ -62,16 +85,42 @@ export default function Rapport() {
     window.location.reload();
   };
 
+  const getFilterTitle = () => {
+    if (!date) return 'LISTE DES RESERVATIONS';
+    
+    switch (filterType) {
+      case 'week':
+        return `Réservations de la semaine du ${date}`;
+      case 'month':
+        return `Réservations du mois du ${date}`;
+      default:
+        return `Réservations du ${date}`;
+    }
+  };
+
   return (
     <>
       <Header />
       <Layout>
         <main className={`${styles.pageContainer}`}>
-          <h1 className={styles.title}>LISTE DES RESERVATIONS</h1>
+          <h1 className={styles.title}>{getFilterTitle()}</h1>
+          
           <div className={styles.filtersCalendarContainer}>
             <div className={styles.filtersColumn}>
               <div className={styles.filters} style={{marginLeft:'500px'}}>
-                <label>Filtrer par date : </label>
+                <label>Filtrer par : </label>
+                <select 
+                  value={filterType} 
+                  onChange={handleFilterTypeChange}
+                  className={styles.filterSelect}
+                  style={{ width: '120px', marginRight: '10px' }}
+                >
+                  <option value="day">Jour</option>
+                  <option value="week">Semaine</option>
+                  <option value="month">Mois</option>
+                </select>
+                
+                <label>Date : </label>
                 <input
                   type="date"
                   id="date"
@@ -83,12 +132,13 @@ export default function Rapport() {
               </div>
             </div>
           </div>
+          
           {loading && <p>Chargement des réservations...</p>}
           {error && <p style={{ color: 'red' }}>{error}</p>}
           {reservations.length > 0 && (
             <>
               <div id="printableArea" style={{ width: '100%' }}>
-                <table className={styles.table} style={{ width: '100%' }}>
+                <table className={styles.table} style={{ width: '100%'}}>
                   <thead>
                     <tr>
                       <th>Date</th>
@@ -97,7 +147,6 @@ export default function Rapport() {
                       <th>Objet</th>
                       <th>Organisateur</th>
                       <th>Département</th>
-                      <th>Statut</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -109,14 +158,6 @@ export default function Rapport() {
                         <td>{reservation.subject}</td>
                         <td>{reservation.organizer?.name || 'N/A'}</td>
                         <td>{reservation.departement || 'N/A'}</td>
-                        <td>
-                          <span className={`${styles.status} ${
-                            reservation.status === 'CONFIRMED' ? styles['status-confirmed'] :
-                            reservation.status === 'CANCELLED' ? styles['status-cancelled'] : ''
-                          }`}>
-                            {reservation.status}
-                          </span>
-                        </td>
                       </tr>
                     ))}
                   </tbody>

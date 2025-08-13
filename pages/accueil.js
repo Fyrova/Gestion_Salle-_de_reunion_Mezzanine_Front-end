@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import MyCalendar from '../components/Calendar';
-
 export default function Home() {
   return (
     <div>
@@ -9,7 +7,7 @@ export default function Home() {
       </Head>
       <main>
         <h1>Welcome to My Calendar</h1>
-        <MyCalendar />
+        <p>Calendar functionality will be available soon.</p>
       </main>
     </div>
   );
